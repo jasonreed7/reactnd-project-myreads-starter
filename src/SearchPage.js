@@ -9,10 +9,6 @@ class SearchPage extends React.Component {
     searchResults: []
   }
 
-  constructor(props) {
-    super(props);
-  }
-
   moveBookToShelf = (book, shelf) => {
     this.props.moveBookToShelf(book, shelf)
 
