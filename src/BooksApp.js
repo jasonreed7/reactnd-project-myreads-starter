@@ -10,26 +10,24 @@ class BooksApp extends React.Component {
     books: []
   }
 
-  componentDidMount = () => {
-    BooksAPI.getAll().then(books => {
-      this.setState({
-        books
-      })
+  componentDidMount = async () => {
+    const books = await BooksAPI.getAll()
+    this.setState({
+      books
     })
   }
 
-  moveBookToShelf = (book, shelf) => {
-    BooksAPI.update(book, shelf).then(shelfIds => {
-      if (book.shelf) {
-        this.setState(prevState => ({
-          books: prevState.books.map(item => item.id === book.id ? Object.assign({}, item, { shelf }) : item)
-        }))
-      } else {
-        this.setState(prevState => ({
-          books: prevState.books.concat([Object.assign({}, book, { shelf })])
-        }))
-      }
-    })
+  moveBookToShelf = async (book, shelf) => {
+    await BooksAPI.update(book, shelf)
+    if (book.shelf === 'none') {
+      this.setState(prevState => ({
+        books: prevState.books.concat([Object.assign({}, book, { shelf })])
+      }))
+    } else {
+      this.setState(prevState => ({
+        books: prevState.books.map(item => item.id === book.id ? Object.assign({}, item, { shelf }) : item)
+      }))
+    }
   }
 
   render() {

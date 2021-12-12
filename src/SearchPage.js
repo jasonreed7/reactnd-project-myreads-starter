@@ -17,27 +17,26 @@ class SearchPage extends React.Component {
     }))
   }
 
-  handleSearchChange = query => {
+  handleSearchChange = async query => {
     if (!query) {
       this.setState({
         searchResults: []
       })
     } else {
-      BooksAPI.search(query).then(searchResults => {
-        if (!searchResults || searchResults.error) {
-          searchResults = []
-        }
+      let searchResults = await BooksAPI.search(query)
+      if (!searchResults || searchResults.error) {
+        searchResults = []
+      }
 
-        searchResults.forEach(book => {
-          const assignedBook = this.props.books.find(shelvedBook => shelvedBook.id === book.id)
-          if (assignedBook) {
-            book.shelf = assignedBook.shelf
-          } else {
-            book.shelf = 'none'
-          }
-        });
-        this.setState({ searchResults })
-      })
+      searchResults.forEach(book => {
+        const assignedBook = this.props.books.find(shelvedBook => shelvedBook.id === book.id)
+        if (assignedBook) {
+          book.shelf = assignedBook.shelf
+        } else {
+          book.shelf = 'none'
+        }
+      });
+      this.setState({ searchResults })
     }
   }
 
